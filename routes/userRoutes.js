@@ -27,7 +27,7 @@ userRouter.post("/signup", async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
     const { email, password } = req.body;
-
+    console.log(req.body)
     try {
         const userAvailable = await newUser.findOne({
             email: email,
