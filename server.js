@@ -133,7 +133,7 @@ app.post('/get-products', async (req, res) => {
 
 app.delete('/:id', async (req, res) => {
     const { id } = req.params
-    console.log('delete', id)
+    // console.log('delete', id)
     newUser.updateOne({ _id: mongoose.Types.ObjectId(id) }, { $set: { cart: [] } }, { new: true })
         .then((res) => {
             res.send(res)
