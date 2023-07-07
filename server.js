@@ -101,35 +101,35 @@ app.post('/get-products', async (req, res) => {
 })
 
 // const obj = require("mongodb").ObjectID
-// app.delete('/:id/:product_index', async (req, res) => {
-//     const { id, product_index } = req.params
-
-//     newUser.findOne({ _id: mongoose.Types.ObjectId(id) }, (err, result) => {
-//         if (err) {
-//             res.status(404).send({ message: "cannot get user", err }).end();
-//         }
-//         else {
-//             const book = result.cart[product_index]
-//             newUser.findOneAndUpdate(
-//                 { _id: mongoose.Types.ObjectId(id) },
-//                 {
-//                     $pull: {
-//                         cart: book
-//                     }
-//                 },
-//                 { new: true },
-//                 (err, result) => {
-//                     if (err) {
-//                         res.status(404).send({ message: "cannot get user", err }).end();
-//                     }
-//                     else {
-//                         res.json(result)
-//                     }
-//                 }
-//             )
-//         }
-//     })
-// })
+app.delete('/:id/:product_index', async (req, res) => {
+    const { id, product_index } = req.params
+console.log(req.params)
+    newUser.findOne({ _id: mongoose.Types.ObjectId(id) }, (err, result) => {
+        if (err) {
+            res.status(404).send({ message: "cannot get user", err }).end();
+        }
+        else {
+            const book = result.cart[product_index]
+            newUser.findOneAndUpdate(
+                { _id: mongoose.Types.ObjectId(id) },
+                {
+                    $pull: {
+                        cart: book
+                    }
+                },
+                { new: true },
+                (err, result) => {
+                    if (err) {
+                        res.status(404).send({ message: "cannot get user", err }).end();
+                    }
+                    else {
+                        res.json(result)
+                    }
+                }
+            )
+        }
+    })
+})
 
 app.delete('/:id', async (req, res) => {
     const { id } = req.params
