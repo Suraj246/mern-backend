@@ -30,10 +30,13 @@ productRouter.post('/create-product', upload.single("image"), async (req, res) =
 })
 
 productRouter.delete('/delete-product/:id', async (req, res) => {
-console.log(req.params)
+    console.log(req.params)
     try {
         const products = await Product.findByIdAndDelete({ _id: req.params.id });
-        res.status(200).json({ products })
+        if (products) {
+            const products = await Product.find();
+            res.status(200).json({ products })
+        }
     } catch (error) {
         res.status(500).json({ error: error })
     }
@@ -44,8 +47,11 @@ productRouter.put('/update-product/:id', async (req, res) => {
 
     const { name, slug, description, price, brand, instruction, rating, inStock, } = req.body
     try {
-        const products = await Product.findByIdAndUpdate({ _id: req.params.id }, { name: name, slug: slug, description: description, price: price, brand: brand, instruction: instruction, rating: rating, inStock: inStock });
-        res.status(200).json({ products })
+        const products = await Product.findByIdAndUpdate({ _id: req.params.id }, { name: name, slug: slug, description: description, price: price, brand: brand, instruction: instruction, ratings: rating, inStock: inStock });
+        if (products) {
+            const products = await Product.findByIdAndUpdate({ _id: req.params.id });
+            res.status(200).json({ products })
+        }
     } catch (error) {
         res.status(500).json({ error: error })
     }

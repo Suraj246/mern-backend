@@ -2,17 +2,18 @@ import express from 'express'
 import Order from '../schemas/orderSchema.js'
 import newUser from '../schemas/userScheme.js'
 const orderRouter = express.Router()
+import path from 'path'
 
 // save order in database
 orderRouter.post('/order', async (req, res) => {
     const { cart, userAddress, payment, totalAmount } = req.body
     try {
-        if (cart.cart.length === 0) {
+        if (cart.length === 0) {
             res.status(404).json({ message: 'order not placed because cart is empty' })
         }
         else {
             const order = new Order({
-                orderItems: cart.cart,
+                orderItems: cart,
                 payment: payment,
                 totalAmount: totalAmount,
                 shippingAddress: userAddress
@@ -27,9 +28,9 @@ orderRouter.post('/order', async (req, res) => {
 
 // save order to individual user
 orderRouter.post("/get-order", async (req, res) => {
-    console.log("pro req", req.body)
+
     try {
-        const product = await newUser.updateOne({ _id: req.body.userId }, { $addToSet: { orders: req.body.orderId } });
+        const product = await newUser.updateOne({ _id: req.body.userId.userId }, { $addToSet: { orders: req.body.userId.orderId } });
 
         if (product) {
             res.status(200).send({ message: "order successfully added", product });
@@ -75,6 +76,7 @@ orderRouter.post('/update-order/isPaid', async (req, res) => {
     try {
         const orders = await Order.findByIdAndUpdate({ _id: orderId }, { isPaid });
         if (orders) {
+            const orders = await Order.find({});
             res.status(200).json({ success: "order updated", orders });
         }
         else {
@@ -91,6 +93,7 @@ orderRouter.post('/update-order/isDelivered', async (req, res) => {
     try {
         const orders = await Order.findByIdAndUpdate({ _id: orderId }, { isDelivered });
         if (orders) {
+            const orders = await Order.find({});
             res.status(200).json({ success: "order updated", orders });
         }
         else {

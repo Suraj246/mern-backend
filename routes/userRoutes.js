@@ -27,7 +27,6 @@ userRouter.post("/signup", async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
     const { email, password } = req.body;
-    console.log(req.body)
     try {
         const userAvailable = await newUser.findOne({
             email: email,
@@ -55,8 +54,12 @@ userRouter.post("/login", async (req, res) => {
                 //     httpOnly: true,
                 // });
                 res.status(200).json({
-                    message: "login successful",
-                    userAvailable: userAvailable,
+                    message: "success",
+                    userAvailable: {
+                        name: userAvailable.name,
+                        email: userAvailable.email,
+                        _id: userAvailable._id
+                    },
                     token,
                     userId: userAvailable._id
                 });
@@ -72,8 +75,13 @@ userRouter.post("/login", async (req, res) => {
                 email === adminAvailable.email
             ) {
                 res.status(200).json({
-                    message: "login successful",
-                    adminAvailable: adminAvailable,
+                    message: "success",
+                    adminAvailable: {
+                        type: adminAvailable.type,
+
+                        email: adminAvailable.email,
+                        _id: adminAvailable._id
+                    },
                 });
             } else {
                 res.status(401).json({ message: "email or password incorrect" });
