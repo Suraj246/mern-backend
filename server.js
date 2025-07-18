@@ -133,7 +133,7 @@ app.post('/get-products', async (req, res) => {
 app.delete('/:id/:product_index', async (req, res) => {
     const { id, product_index } = req.params;
     try {
-        const user = await newUser.findOne({ _id: mongoose.Types.ObjectId(id) });
+        const user = await newUser.findOne({ _id: new mongoose.Types.ObjectId(id) });
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -144,6 +144,7 @@ app.delete('/:id/:product_index', async (req, res) => {
         const data = await newUser.findOne({ _id: id }).populate("cart")
         res.json({ message: 'Item removed from cart', removedItem, data });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
@@ -153,7 +154,7 @@ app.delete('/:id/:product_index', async (req, res) => {
 // deleting all products from the cart after creating a new order
 app.delete('/:id', async (req, res) => {
     const { id } = req.params
-    newUser.updateOne({ _id: mongoose.Types.ObjectId(id) }, { $set: { cart: [] } }, { new: true })
+    newUser.updateOne({ _id: new mongoose.Types.ObjectId(id) }, { $set: { cart: [] } }, { new: true })
         .then((res) => {
             res.send(res)
         })
